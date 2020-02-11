@@ -76,6 +76,7 @@ where
 mod tests {
     // 親モジュール (first) の sort 関数を使用する
     use super::{sort, sort_by};
+    use crate::utils::{is_sorted_ascending, is_sorted_descending, new_u32_vec};
     use crate::SortOrder::*;
 
     // #[test] の付いた関数は cargo test した時に実行される
@@ -218,5 +219,21 @@ mod tests {
             Ok(())
         );
         assert_eq!(x, expected);
+    }
+
+    #[test]
+    fn sort_u32_large() {
+        {
+            // 乱数で 65,536 要素のデータ列を作る (65,536 は 2 の 16 乗)
+            let mut x = new_u32_vec(65536);
+
+            assert_eq!(sort(&mut x, &Ascending), Ok(()));
+            assert!(is_sorted_ascending(&x));
+        }
+        {
+            let mut x = new_u32_vec(65536);
+            assert_eq!(sort(&mut x, &Descending), Ok(()));
+            assert!(is_sorted_descending(&x));
+        }
     }
 }
